@@ -72,13 +72,13 @@ const Weather: React.FC = () => {
     ? posts.map((elem, index) => {
         return (
           <div key={index}>
-            <h1>Country detail</h1>
+          <h1>Country detail</h1>
             <img src={elem.flags[1]} alt="Country flag" />
-            <p>Capital: {elem.capital}</p>
-            <p>Country's population: {elem.population}</p>
-            <p>Latitude: {elem.latlng[0]}</p>
-            <p>Longitude: {elem.latlng[1]}</p>
-            <button onClick={(e) => handleCapital(e)}>Capital Weather</button>
+            <p data-testid="capital">Capital: {elem.capital}</p>
+            <p data-testid="population">Country's population: {elem.population}</p>
+            <p data-testid="latitude">Latitude: {elem.latlng[0]}</p>
+            <p data-testid="longitude">Longitude: {elem.latlng[1]}</p>
+            <button onClick={handleCapital}>Capital Weather</button>
           </div>
         );
       })
