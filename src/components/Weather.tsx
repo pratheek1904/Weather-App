@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-
+import '../components/Weather.css'
 const Weather: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [posts, setPosts] = useState<any[]>([]);
@@ -8,16 +8,16 @@ const Weather: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch(`https://restcountries.com/v3/name/${inputValue}`);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = await response.json();
-      console.log(data)
       if (data.length === 0) {
         setError("Country not found. Please try again with a valid country name.");
         setLoading(false);
@@ -25,10 +25,9 @@ const Weather: React.FC = () => {
       }
       setPosts(data);
       setActive(true);
-      setLoading(false);
-      setError(null);
     } catch (err:any) {
       setError(`An error occurred: ${err.message}`);
+    } finally {
       setLoading(false);
     }
   };
@@ -55,10 +54,12 @@ const Weather: React.FC = () => {
         <input
           type="text"
           placeholder="Enter Country"
+          className="input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-        />
+        />&nbsp;
         <button 
+        className="submit"
         type="submit"
          disabled={!inputValue}>
           Submit
@@ -67,33 +68,33 @@ const Weather: React.FC = () => {
       {loading && <div>Loading...</div>}
       {error && <div>{error}</div>}
     
-      {
+   <div >
+   {
   active
     ? posts.map((elem, index) => {
         return (
-          <div key={index} data-testid="details">
+          <div key={index} data-testid="country-details" className="container">
           <h1>Country detail</h1>
             <img src={elem.flags[1]} alt="Country flag" />
-            <p>Capital: {elem.capital}</p>
-            <p>Country's population: {elem.population}</p>
-            <p>Latitude: {elem.latlng[0]}</p>
-            <p>Longitude: {elem.latlng[1]}</p>
-            <button onClick={handleCapital}>Capital Weather</button>
+            <li data-testid="capital">Capital: {elem.capital}</li>
+            <li>Country's population: {elem.population}</li>
+            <li>Latitude: {elem.latlng[0]}</li>
+            <li>Longitude: {elem.latlng[1]}</li>
+            <button onClick={handleCapital} className="capWeather">Capital Weather</button>
           </div>
         );
       })
     : details.current && (
-        <div>
+        <div className="container">
              <h1>Country details</h1>
           <img src={details.current.condition.icon} alt="Weather icon" />
-          <p>Temperature: {details.current.temp_c}</p>
+          <p>Temperature: {details.current.temp_c}°C</p>
           <p>Wind Speed: {details.current.wind_kph} kph</p>
           <p>Precipitation: {details.current.precip_in}</p>
         </div>
       )
 }
-
-
+   </div>
     </>
   );
 };
