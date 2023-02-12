@@ -9,21 +9,26 @@ const Weather: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+ 
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(`https://restcountries.com/v3/name/${inputValue}`);
+
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = await response.json();
+      console.log(data)
       if (data.length === 0) {
         setError("Country not found. Please try again with a valid country name.");
         setLoading(false);
         return;
       }
+
       setPosts(data);
+    
       setActive(true);
     } catch (err:any) {
       setError(`An error occurred: ${err.message}`);
@@ -77,9 +82,9 @@ const Weather: React.FC = () => {
           <h1>Country detail</h1>
             <img src={elem.flags[1]} alt="Country flag" />
             <li data-testid="capital">Capital: {elem.capital}</li>
-            <li>Country's population: {elem.population}</li>
-            <li>Latitude: {elem.latlng[0]}</li>
-            <li>Longitude: {elem.latlng[1]}</li>
+            <li  data-testid="population">Country's population: {elem.population}</li>
+            <li  data-testid="latitude">Latitude: {elem.latlng[0]}</li>
+            <li  data-testid="longitude">Longitude: {elem.latlng[1]}</li>
             <button onClick={handleCapital} className="capWeather">Capital Weather</button>
           </div>
         );
@@ -94,6 +99,7 @@ const Weather: React.FC = () => {
         </div>
       )
 }
+
    </div>
     </>
   );
